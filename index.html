@@ -2,121 +2,133 @@
 <html>
 <head>
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>TAXI RUSH LIFE - Living Town</title>
+<title>TAXI RUSH LIFE - PRO 3D</title>
 <style>
-body{margin:0;background:#111;color:#fff;font-family:Arial;text-align:center}
-h1{color:#facc15;margin:3px;font-size:18px}
-canvas{background:#2d5a2d;display:block;margin:5px auto;border:3px solid #facc15;border-radius:10px;width:96vw;max-width:680px;height:320px;touch-action:none}
-button{padding:10px 14px;margin:3px;font-size:16px;border:none;border-radius:12px;background:#facc15;font-weight:bold}
-#novel{display:none;background:#1f2937;border:3px solid #facc15;border-radius:12px;padding:12px;margin:5px auto;max-width:680px;text-align:left}
-#face{font-size:55px;float:left;margin-right:12px}
-#dpad button{width:60px;height:50px;font-size:22px}
+body{margin:0;background:#0f172a;color:#fff;font-family:Arial;text-align:center}
+h1{color:#facc15;margin:4px;font-size:19px}
+canvas{display:block;margin:5px auto;border:3px solid #facc15;border-radius:12px;width:97vw;max-width:720px;height:360px;touch-action:none}
+button{padding:11px 16px;margin:4px;font-size:16px;border:none;border-radius:12px;background:#facc15;font-weight:bold}
+.nitro{background:#22d3ee!important;color:#000}
+.card{background:#1e293b;border:2px solid #facc15;border-radius:14px;padding:10px;margin:6px auto;max-width:720px;text-align:left}
+.bar{height:10px;background:#334155;border-radius:10px;overflow:hidden;margin:3px 0}
+.fill{height:100%;background:#facc15}
+.row{display:flex;gap:8px;justify-content:space-between}
+.lb{background:#0f172a;border-radius:10px;padding:8px;margin:4px 0;font-size:14px}
 </style>
 </head>
 <body>
-<h1>🚕 TAXI RUSH LIFE - SOSHANGUVE TOWN</h1>
-<div id="hud">💰 R0 | 📍 Soshanguve | People walking, cars driving!</div>
-<button onclick="goLandscape()">⛶ PLAY FULLSCREEN LANDSCAPE</button>
-<canvas id="game" width="680" height="320"></canvas>
-<div id="novel">
-<div id="face">👵</div>
-<div id="nname" style="color:#facc15;font-weight:bold">GOGO</div>
-<div id="ntext" style="margin:8px 0;line-height:1.4">...</div>
-<button onclick="nextDialogue()">▶️ NEXT / YES</button>
-<button onclick="closeNovel()">❌ CLOSE</button>
+<h1>🚕 TAXI RUSH LIFE - PRO 3D</h1>
+<div id="hud">💰 R0 | 🏆 Pos: 4th | 💨 0 km/h</div>
+
+<div id="home">
+<div class="card">
+<div class="row"><b>🆚 VS BATTLE</b><b>💰 16196 | 💎 39 | ⭐ 42</b></div>
+<div class="row">
+<div style="flex:1"><b>🧑 YOU - Taxi King</b><br>TAXI • Soshanguve<br>TOP SPD <div class="bar"><div class="fill" style="width:85%"></div></div> NOS <div class="bar"><div class="fill" style="width:90%"></div></div> HANDLE <div class="bar"><div class="fill" style="width:75%"></div></div><div style="font-size:50px;text-align:center">🚕</div></div>
+<div style="font-size:40px;align-self:center;color:#facc15"><b>VS</b></div>
+<div style="flex:1"><b>😎 RIVAL - William</b><br>GT 86 • Mabopane<br>TOP SPD <div class="bar"><div class="fill" style="width:70%"></div></div> NOS <div class="bar"><div class="fill" style="width:60%"></div></div> HANDLE <div class="bar"><div class="fill" style="width:80%"></div></div><div style="font-size:50px;text-align:center">🚙</div></div>
 </div>
-<div id="dpad">
-<button onclick="move(0,-1)">⬆️</button><br>
-<button onclick="move(-1,0)">⬅️</button>
-<button onclick="talk()">💬 TALK</button>
-<button onclick="move(1,0)">➡️</button><br>
-<button onclick="move(0,1)">⬇️</button>
+<button onclick="startRace()">🏁 START RACE - SOSHANGUVE TO PRETORIA</button>
 </div>
-<p style="font-size:12px">TAP town to walk there • Walk to 👵🎓👷🔧 + TALK</p>
+<div class="card"><b>🏆 LEADERBOARD - SOSHANGUVE RANK</b>
+<div class="lb">🥇 1. Player Robinson - 🏆 615 - 👍 55</div>
+<div class="lb">🥈 2. Bangkix Ching - 🏆 485 - 👍 30</div>
+<div class="lb">🥉 3. John Tyo - 🏆 485 - 👍 20</div>
+<div class="lb">4. WEEE - 🏆 435</div>
+<div class="lb">5. Speedrider - 🏆 425</div>
+<div class="lb" style="background:#facc15;color:#000"><b>⭐ YOU - Taxi King - 🏆 0 - Beat them!</b></div>
+<div style="font-size:12px;margin-top:6px">REWARDS: Rank 1-3 = R100000 + 600💎 | Rank 4-10 = R50000 | Rank 11-50 = R30000</div>
+</div>
+</div>
+
+<div id="race" style="display:none">
+<canvas id="game" width="720" height="360"></canvas>
+<div>
+<button onclick="steer(-1)">⬅️ LEFT</button>
+<button class="nitro" onclick="nitro()">⚡ NITRO</button>
+<button onclick="steer(1)">RIGHT ➡️</button>
+<button onclick="backHome()">🏠 HOME</button>
+</div>
+<p style="font-size:12px">TAP LEFT / RIGHT side of road to steer • NITRO for boost • Pass all 3 cars to become 1st!</p>
+</div>
+
 <script>
 let c=document.getElementById("game"),x=c.getContext("2d");
-let player={x:340,y:160},money=0;
-// tries to force landscape - works best after you tap PLAY
-async function goLandscape(){
- try{ await document.documentElement.requestFullscreen(); }catch(e){}
- try{ await screen.orientation.lock("landscape"); }catch(e){ alert("Turn phone sideways now - game already works in portrait too!"); }
-}
-let chars=[
- {name:"GOGO",face:"👵",x:90,y:75,color:"#f472b6",lines:["Sawubona my child!","My knees are sore, take me to Mabopane?","I will pay you R50! You are a good boy!","Hamba kahle! Go, go!"]},
- {name:"STUDENT",face:"🎓",x:580,y:75,color:"#60a5fa",lines:["Bhuti! Bhuti! I'm late!","School starts in 5 mins in Mabopane!","If you rush me I'll pay R80, please!","Sharp sharp! Let's go!"]},
- {name:"WORKER",face:"👷",x:90,y:250,color:"#fb923c",lines:["Eita! Taxi!","I need Pretoria CBD, my boss will kill me!","Traffic is crazy, but you drive fast neh?","I'll pay R100 if you make it on time!"]},
- {name:"MECHANIC",face:"🔧",x:580,y:250,color:"#a3a3a3",lines:["Your taxi is broken, my friend.","R500 to fix it. Engine is finished!","Go hustle in town, talk to people.","Come back when you have R500!"]}
+let px=0,speed=0,dist=0,money=0,pos=4,nitroOn=0,racing=false;
+let rivals=[
+ {name:"3rd",lane:-0.55,z:300,color:"#ef4444",face:"🚗"},
+ {name:"2nd",lane:0.1,z:600,color:"#f59e0b",face:"🚙"},
+ {name:"1st",lane:0.5,z:900,color:"#3b82f6",face:"🚘"}
 ];
-// REAL PEOPLE WALKING ON ROADS
-let walkers=[
- {x:0,y:150,dx:1.5,face:"🚶‍♀️"},{x:680,y:165,dx:-1.2,face:"🚶‍♂️"},
- {x:340,y:0,dy:1,face:"🚶"},{x:355,y:320,dy:-1.4,face:"🚶‍♀️"},
- {x:100,y:150,dx:0.8,face:"🧑‍🦱"},{x:500,y:165,dx:-0.9,face:"👩"}
-];
-// CARS DRIVING ON ROADS
-let cars=[
- {x:0,y:140,dx:2.5,color:"#ef4444",label:"🚕"},{x:680,y:175,dx:-2,color:"#3b82f6",label:"🚙"},
- {x:320,y:0,dy:2,color:"#facc15",label:"🚕"},{x:360,y:320,dy:-1.8,color:"#22c55e",label:"🚗"}
-];
-let cur=null,li=0;
-function move(dx,dy){player.x+=dx*25; player.y+=dy*25; if(player.x<20)player.x=20; if(player.x>660)player.x=660; if(player.y<20)player.y=20; if(player.y>290)player.y=290;}
-function talk(){
- let near=null,dist=999;
- chars.forEach(ch=>{let d=Math.abs(ch.x-player.x)+Math.abs(ch.y-player.y); if(d<dist){dist=d; near=ch;}});
- if(dist>100){alert("Walk closer to a character first! Go to 👵 🎓 👷 🔧"); return;}
- cur=near; li=0; showNovel();
-}
-function showNovel(){
- document.getElementById("novel").style.display="block";
- document.getElementById("face").innerText=cur.face;
- document.getElementById("nname").innerText=cur.name;
- document.getElementById("ntext").innerText=cur.lines[li];
- document.getElementById("novel").scrollIntoView({behavior:"smooth"});
-}
-function nextDialogue(){
- if(!cur) return; li++;
- if(li>=cur.lines.length){
-   let pay = cur.name=="GOGO"?50: cur.name=="STUDENT"?80: cur.name=="WORKER"?100:0;
-   if(pay>0){money+=pay; alert(cur.name+" paid you R"+pay+"! Total: R"+money); if(money>=500) alert("🎉 YOU HAVE R500! Go talk to MECHANIC to fix taxi!");}
-   closeNovel(); return;
- }
- showNovel();
-}
-function closeNovel(){document.getElementById("novel").style.display="none"; cur=null;}
-function draw(){
- x.clearRect(0,0,680,320);
- x.fillStyle="#2d5a2d"; x.fillRect(0,0,680,320);
- // roads
- x.fillStyle="#444"; x.fillRect(0,135,680,45); x.fillStyle="#444"; x.fillRect(320,0,45,320);
- x.fillStyle="#facc15"; for(let i=0;i<10;i++){x.fillRect(i*68,156,28,4);}
- x.fillStyle="#facc15"; for(let i=0;i<5;i++){x.fillRect(338,i*68,4,28);}
- // buildings
- x.fillStyle="#7c3aed"; x.fillRect(30,20,140,80); x.fillStyle="#fff"; x.font="bold 12px Arial"; x.fillText("GOGO'S HOUSE",35,58);
- x.fillStyle="#2563eb"; x.fillRect(510,20,140,80); x.fillText("SCHOOL",540,58);
- x.fillStyle="#ea580c"; x.fillRect(30,215,140,80); x.fillText("TAXI RANK",45,255);
- x.fillStyle="#525252"; x.fillRect(510,215,140,80); x.fillText("GARAGE",540,255);
- // moving cars
- cars.forEach(car=>{
-   if(car.dx) car.x+=car.dx; if(car.dy) car.y+=car.dy;
-   if(car.x>700) car.x=-50; if(car.x<-60) car.x=690; if(car.y>340) car.y=-40; if(car.y<-50) car.y=330;
-   x.fillStyle=car.color; x.fillRect(car.x-22,car.y-12,44,24); x.font="22px Arial"; x.fillText(car.label,car.x-12,car.y+8);
+let trees=[]; for(let i=0;i<20;i++) trees.push({side:i%2?1:-1,z:i*120});
+function startRace(){document.getElementById("home").style.display="none"; document.getElementById("race").style.display="block"; racing=true; speed=40; loop();}
+function backHome(){racing=false; document.getElementById("race").style.display="none"; document.getElementById("home").style.display="block";}
+function steer(d){px+=d*0.25; if(px>0.9)px=0.9; if(px<-0.9)px=-0.9;}
+function nitro(){nitroOn=80; speed+=60;}
+c.addEventListener("click",e=>{let r=c.getBoundingClientRect(); if(e.clientX-r.left<r.width/2) steer(-1); else steer(1);});
+function drawRoad(){
+ // sky
+ let g=x.createLinearGradient(0,0,0,360); g.addColorStop(0,"#38bdf8"); g.addColorStop(0.45,"#bae6fd"); g.addColorStop(0.5,"#166534"); g.addColorStop(1,"#14532d");
+ x.fillStyle=g; x.fillRect(0,0,720,360);
+ // sun + clouds
+ x.fillStyle="#fde047"; x.beginPath(); x.arc(620,40,28,0,Math.PI*2); x.fill();
+ x.fillStyle="rgba(255,255,255,.9)"; [80,300,500].forEach(cx=>{x.beginPath(); x.ellipse(cx+((dist*0.2)%100),50,50,16,0,Math.PI*2); x.fill();});
+ // mountains
+ x.fillStyle="#4d7c0f"; x.beginPath(); x.moveTo(0,130); x.lineTo(150,50); x.lineTo(300,120); x.lineTo(450,40); x.lineTo(600,110); x.lineTo(720,70); x.lineTo(720,130); x.closePath(); x.fill();
+ // road perspective
+ x.fillStyle="#334155"; x.beginPath(); x.moveTo(320,110); x.lineTo(400,110); x.lineTo(700,360); x.lineTo(20,360); x.closePath(); x.fill();
+ // lane lines moving
+ x.fillStyle="#facc15"; for(let i=0;i<6;i++){let z=((dist*3+i*60)%360); let y=110+z*0.7; let w=2+z*0.04; x.fillRect(358-w/2,y, w, 12+z*0.08);}
+ // side lines
+ x.strokeStyle="#fff"; x.lineWidth=3; x.beginPath(); x.moveTo(320,110); x.lineTo(20,360); x.moveTo(400,110); x.lineTo(700,360); x.stroke();
+ // trees / houses moving
+ trees.forEach(t=>{
+   t.z-=speed*0.3; if(t.z<0) t.z=2400;
+   let s=1-t.z/2400; let y=110+s*230; let sx=360 + t.side*(40+s*340) + px*-s*100;
+   let size=10+s*40; x.font=size+"px Arial"; x.fillText(t.side>0?"🌳":"🏠",sx,y);
  });
- // walking people
- walkers.forEach(w=>{
-   if(w.dx) w.x+=w.dx; if(w.dy) w.y+=w.dy;
-   if(w.x>700) w.x=-20; if(w.x<-30) w.x=690; if(w.y>340) w.y=-20; if(w.y<-30) w.y=330;
-   x.font="22px Arial"; x.fillText(w.face,w.x-11,w.y+8);
- });
- // main characters
- chars.forEach(ch=>{x.fillStyle=ch.color; x.beginPath(); x.arc(ch.x,ch.y,22,0,Math.PI*2); x.fill(); x.fillStyle="#fff"; x.font="28px Arial"; x.fillText(ch.face,ch.x-16,ch.y+10); x.font="bold 10px Arial"; x.fillText(ch.name,ch.x-25,ch.y+38);});
- // player
- x.fillStyle="#facc15"; x.beginPath(); x.arc(player.x,player.y,20,0,Math.PI*2); x.fill(); x.font="26px Arial"; x.fillText("🧑",player.x-14,player.y+9);
- x.fillStyle="#fff"; x.font="bold 11px Arial"; x.fillText("YOU",player.x-14,player.y+36);
- document.getElementById("hud").innerText=`💰 R${money} | 🎯 Goal R500 | 📍 Soshanguve Town | People + Cars moving!`;
- requestAnimationFrame(draw);
 }
-draw();
-c.addEventListener("click",e=>{let r=c.getBoundingClientRect(); player.x=(e.clientX-r.left)/r.width*680; player.y=(e.clientY-r.top)/r.height*320;});
+function loop(){
+ if(!racing) return;
+ if(nitroOn>0){nitroOn--; speed=220;} else speed=Math.min(180,speed+0.3);
+ dist+=speed*0.1;
+ // rivals move
+ let ahead=0;
+ rivals.forEach(r=>{
+   r.z-= (speed-120)*0.5; if(r.z<20) r.z=20+Math.random()*200;
+   if(r.z < 150) ahead++;
+   // collision-ish: if close and same lane
+   if(r.z<120 && Math.abs(r.lane-px)<0.25){speed=60; r.z+=150;}
+ });
+ pos=1+ahead;
+ if(dist>5000){racing=false; money+=500; alert("🎉 YOU FINISHED! +R500! You are "+pos+"st!"); backHome(); return;}
+ drawRoad();
+ // rivals - perspective
+ rivals.slice().sort((a,b)=>b.z-a.z).forEach(r=>{
+   let s=1-r.z/1000; let y=110+s*190; let sx=360 + (r.lane-px)* (40+s*300);
+   let w=30+s*80, h=18+s*45;
+   x.fillStyle=r.color; x.fillRect(sx-w/2,y-h,w,h);
+   x.fillStyle="#111"; x.fillRect(sx-w/2+5,y+4,w-10,10);
+   x.fillStyle="#fff"; x.font="bold "+(10+s*18)+"px Arial"; x.fillText(r.name,sx-18,y-8);
+ });
+ // player taxi - big at bottom like your pics
+ let tx=360+px*120;
+ x.fillStyle="#facc15"; x.fillRect(tx-110,255,220,90);
+ x.fillStyle="#111"; x.fillRect(tx-95,225,190,40);
+ x.fillStyle="#fff"; x.font="bold 16px Arial"; x.fillText("TAXI • SOSHANGUVE",tx-80,300);
+ x.fillStyle="#000"; x.font="bold 14px Arial"; x.fillText("GP 0001",tx-30,330);
+ // nitro fire
+ if(nitroOn>0){x.fillStyle="#22d3ee"; x.fillRect(tx-90,345,35,20); x.fillRect(tx+55,345,35,20); x.fillStyle="#fff"; x.font="bold 12px Arial"; x.fillText("NITRO!",tx-20,360);}
+ // minimap top-left
+ x.fillStyle="rgba(0,0,0,.5)"; x.beginPath(); x.arc(55,55,32,0,Math.PI*2); x.fill();
+ x.strokeStyle="#facc15"; x.stroke(); x.fillStyle="#facc15"; x.font="bold 10px Arial"; x.fillText("MAP",38,88);
+ x.fillStyle="#facc15"; x.beginPath(); x.arc(55+px*15,55+(dist%100)/100*20-10,4,0,Math.PI*2); x.fill();
+ x.fillStyle="#ef4444"; x.beginPath(); x.arc(65,45,3,0,Math.PI*2); x.fill();
+ // HUD
+ x.fillStyle="rgba(0,0,0,.6)"; x.fillRect(0,0,720,28);
+ x.fillStyle="#fff"; x.font="bold 16px Arial"; x.fillText(`💰 R${money}  |  🏆 ${pos}st  |  💨 ${Math.floor(speed)} km/h  |  📍 Soshanguve → Pretoria  |  ${Math.floor(dist/50)}m`,10,20);
+ requestAnimationFrame(loop);
+}
 </script>
 </body>
 </html>
