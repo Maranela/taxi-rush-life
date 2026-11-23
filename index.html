@@ -2,125 +2,113 @@
 <html>
 <head>
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
-<title>TAXI RUSH 3D - SOSHANGUVE</title>
+<title>TAXI RUSH 3D - DRIVE IT</title>
 <style>
 *{box-sizing:border-box}html,body{margin:0;padding:0;background:#000;overflow:hidden;height:100%;font-family:Arial;color:#fff}
 #app{position:fixed;inset:0;background:#000}
 #game{position:absolute;inset:0;width:100%;height:100%;display:block}
-#top{position:absolute;top:0;left:0;right:0;background:linear-gradient(90deg,#1e293b,#334155);padding:7px 10px;display:flex;justify-content:space-between;z-index:5;font-weight:bold;font-size:13px}
-#top b{color:#facc15}
-#coach{position:absolute;top:38px;left:50%;transform:translateX(-50%);background:rgba(0,0,0,.8);border:2px solid #38bdf8;padding:8px 12px;border-radius:10px;z-index:5;text-align:center;max-width:92%;font-size:14px}
-#optBtn{position:absolute;top:38px;right:10px;background:#facc15;color:#000;border:none;padding:8px 10px;border-radius:10px;font-weight:900;z-index:6}
-#leftBtn,#rightBtn{position:absolute;bottom:100px;width:74px;height:74px;border-radius:50%;background:rgba(255,255,255,.2);border:2px solid #fff;color:#fff;font-size:30px;z-index:5}
-#leftBtn{left:14px}#rightBtn{right:14px}
-#gas,#brake{position:absolute;bottom:14px;width:68px;height:68px;border-radius:50%;border:none;color:#fff;font-weight:900;z-index:5}
-#gas{right:14px;background:#22c55e}#brake{left:14px;background:#ef4444}
-#speedBox{position:absolute;bottom:10px;left:50%;transform:translateX(-50%);text-align:center;z-index:5;text-shadow:0 0 10px #22d3ee}
-#speedBox b{font-size:40px}
-#speedBar{width:140px;height:12px;background:#111;border-radius:10px;overflow:hidden;border:1px solid #22d3ee}
-#speedBar i{display:block;height:100%;background:#22d3ee;width:0%}
-#map{position:absolute;top:78px;left:10px;width:95px;background:rgba(0,0,0,.6);border:2px solid #fff;border-radius:10px;padding:6px;z-index:5;font-size:12px}
-#setup,#menu,#options{position:absolute;inset:0;background:rgba(0,0,0,.92);z-index:20;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;padding:16px;text-align:center}
-#menu{display:none}#options{display:none}
+#top{position:absolute;top:0;left:0;right:0;background:rgba(0,0,0,.7);padding:6px 10px;display:flex;justify-content:space-between;z-index:10;font-weight:bold;font-size:13px}
+#coach{position:absolute;top:36px;left:50%;transform:translateX(-50%);background:rgba(0,0,0,.8);border:2px solid #38bdf8;padding:7px 12px;border-radius:10px;z-index:10;text-align:center;max-width:94%;font-size:13px}
+#map{position:absolute;top:72px;left:10px;background:rgba(0,0,0,.6);border:2px solid #fff;border-radius:10px;padding:6px;z-index:10;font-size:12px}
+/* STEERING WHEEL - turns with you! */
+#wheel{position:absolute;bottom:58px;left:50%;transform:translateX(-50%) rotate(0deg);width:110px;height:110px;border:10px solid #111;border-radius:50%;background:radial-gradient(circle,#333 30%,#111 31%);z-index:9;display:flex;align-items:center;justify-content:center;font-size:28px;box-shadow:0 0 20px rgba(0,0,0,.7)}
+#dash{position:absolute;bottom:0;left:0;right:0;height:78px;background:linear-gradient(180deg,#1f2937,#000);border-top:3px solid #333;z-index:8;display:flex;justify-content:space-around;align-items:center}
+#dash b{font-size:22px}
+#leftBtn,#rightBtn{position:absolute;bottom:140px;width:68px;height:68px;border-radius:50%;background:rgba(255,255,255,.25);border:2px solid #fff;color:#fff;font-size:28px;z-index:11}
+#leftBtn{left:12px}#rightBtn{right:12px}
+#gas,#brake{position:absolute;bottom:88px;width:62px;height:62px;border-radius:50%;border:none;color:#fff;font-weight:900;z-index:11}
+#gas{right:12px;background:#22c55e}#brake{left:12px;background:#ef4444}
+#viewBtn,#hornBtn{position:absolute;bottom:150px;z-index:11;padding:8px 10px;border:none;border-radius:10px;font-weight:900}
+#viewBtn{left:50%;transform:translateX(-50%);background:#facc15}
+#hornBtn{right:12px;top:72px;bottom:auto;background:#f97316;color:#fff}
+#setup,#menu,#options{position:absolute;inset:0;background:rgba(0,0,0,.94);z-index:20;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;padding:16px;text-align:center}
+#menu,#options{display:none}
 .card{background:#1e293b;border:2px solid #38bdf8;border-radius:14px;padding:12px;width:100%;max-width:460px}
-input{width:100%;padding:12px;border-radius:10px;border:none;font-size:16px;margin:6px 0}
-button.big{padding:14px 20px;background:#facc15;border:none;border-radius:12px;font-weight:900;font-size:18px;width:100%;max-width:460px}
+input{width:100%;padding:12px;border-radius:10px;border:none;font-size:16px}
+button.big{padding:14px;background:#facc15;border:none;border-radius:12px;font-weight:900;font-size:18px;width:100%;max-width:460px}
 .optRow{display:flex;gap:8px;flex-wrap:wrap;justify-content:center}
 .optRow button{padding:10px 12px;border-radius:10px;border:2px solid #fff;background:#334155;color:#fff;font-weight:bold}
-.optRow button.sel{background:#facc15;color:#000;border-color:#facc15}
+.optRow button.sel{background:#facc15;color:#000}
 </style>
 </head>
 <body>
 <div id="app">
 <canvas id="game"></canvas>
-<div id="top"><span>🚕 <b id="pNameTop">Player</b> <span id="pAv">🧑</span></span><span>⚙️ <button onclick="openOpt()" style="background:#facc15;border:none;border-radius:8px;padding:3px 8px;font-weight:900">OPTIONS</button></span><span>💰 <b id="moneyTop">500</b> | 💎 0 | ⭐ <b id="xpTop">0</b></span></div>
-<div id="coach">👩‍🦰 Tap GAS to go! Tap ◀ ▶ to steer. Don't hit cars!</div>
-<div id="map">🗺️ SOSHANGUVE<br>▲ YOU<br><span style="color:#ef4444">● RIVAL</span><br>Lincoln Ave<br>1/2 MILE</div>
+<div id="top"><span>🚕 <b id="pNameTop">Player449310</b> <span id="pAv">🧑</span></span><span><button onclick="openOpt()" style="background:#facc15;border:none;border-radius:8px;padding:3px 8px;font-weight:900">⚙️ OPTIONS</button></span><span>💰 <b id="moneyTop">500</b> | ⭐ <b id="xpTop">0</b></span></div>
+<div id="coach">👩‍🦰 Hold GAS! Turn wheel! Feel the speed!</div>
+<div id="map">🗺️ SOSHANGUVE<br>▲ YOU • RIVAL<br>Lincoln Ave</div>
+<button id="viewBtn" onclick="toggleView()">📷 VIEW: INSIDE</button>
+<button id="hornBtn" onclick="horn()">📯 HORN</button>
 <button id="leftBtn" ontouchstart="left=1" ontouchend="left=0" onmousedown="left=1" onmouseup="left=0">◀</button>
 <button id="rightBtn" ontouchstart="right=1" ontouchend="right=0" onmousedown="right=1" onmouseup="right=0">▶</button>
 <button id="brake" ontouchstart="braking=1" ontouchend="braking=0">BRAKE</button>
-<button id="gas" ontouchstart="gas=1" ontouchend="gas=0">GAS</button>
-<div id="speedBox"><b id="spd">0</b><div id="speedBar"><i id="spdBar"></i></div><span>km/h</span></div>
+<button id="gas" ontouchstart="gas=1;startEngine()" ontouchend="gas=0">GAS</button>
+<div id="wheel">🚕</div>
+<div id="dash"><span>🪞 <b id="mirror">---</b><br><small>REAR MIRROR</small></span><span style="text-align:center"><b id="spd" style="font-size:34px;color:#22d3ee">0</b><br>km/h</span><span><b id="gear">1</b><br><small>GEAR</small></span></div>
 
-<!-- SETUP: NAME + AVATAR + CAR like your pics -->
-<div id="setup">
-<h1 style="margin:0">🚕 TAXI RUSH <span style="color:#facc15">3D</span></h1>
-<div class="card"><b>Enter the name</b><input id="nameIn" value="Player449310" placeholder="Enter your name"><b>Choose Avatar</b><div class="optRow" id="avRow"><button onclick="pickAv(this,'🧑')">🧑</button><button onclick="pickAv(this,'👩')">👩</button><button onclick="pickAv(this,'🧔')">🧔</button><button onclick="pickAv(this,'👩‍🦰')">👩‍🦰</button><button onclick="pickAv(this,'😎')">😎</button></div><b>Choose Your Car</b><div class="optRow" id="carRow"><button onclick="pickCar(this,'#1d4ed8')">🔵 BLUE</button><button onclick="pickCar(this,'#facc15')">🟡 TAXI</button><button onclick="pickCar(this,'#ef4444')">🔴 RED</button><button onclick="pickCar(this,'#22c55e')">🟢 GREEN</button></div></div>
-<button class="big" onclick="saveSetup()">✅ OK - GET C-LICENSE</button>
-<p style="font-size:12px;color:#94a3b8">This is like your pics: Name → Avatar → License → Garage</p>
-</div>
-
-<!-- MENU / CAREER -->
-<div id="menu">
-<h2 id="welcome">Welcome!</h2>
-<div class="card"><b>🎖️ INFORMATION - C LEVEL DRIVER</b><br>XP <span id="xpMenu">0</span>/600 | Career 0/146 | Get 1st: 0<br>Car: <span id="carName">GT 86 - Blue</span></div>
-<div class="card"><b>🏁 CAREER - Amateur Challenge</b><br>🟢 London - Soshanguve - ANY CAR - ⭐⭐⭐<br>🔒 Race 2 - Win Race 1 to unlock</div>
-<button class="big" onclick="startRace()">🏁 START RACE - SOSHANGUVE</button>
-<button class="big" style="background:#38bdf8" onclick="openOpt()">⚙️ OPTIONS</button>
-</div>
-
-<!-- OPTIONS -->
-<div id="options">
-<h2>⚙️ OPTIONS</h2>
-<div class="card"><b>Control</b><div class="optRow"><button id="cTouch" class="sel" onclick="setControl('touch')">📱 Touch</button><button id="cTilt" onclick="setControl('tilt')">📱↻ G-Sense Tilt</button></div><b>Sound</b><div class="optRow"><button id="sOn" class="sel" onclick="setSound(true)">🔊 ON</button><button id="sOff" onclick="setSound(false)">🔇 OFF</button></div><b>Camera</b><div class="optRow"><button id="camNear" class="sel" onclick="setCam('near')">Close</button><button id="camFar" onclick="setCam('far')">Far</button></div><b>Car Colour</b><div class="optRow"><button onclick="changeCarColor('#1d4ed8')">🔵</button><button onclick="changeCarColor('#facc15')">🟡</button><button onclick="changeCarColor('#ef4444')">🔴</button><button onclick="changeCarColor('#22c55e')">🟢</button></div></div>
-<button class="big" onclick="closeOpt()">✅ SAVE & BACK</button>
-</div>
+<div id="setup"><h1 style="margin:0">🚕 TAXI RUSH <span style="color:#facc15">3D</span></h1><div class="card"><b>Enter Name</b><input id="nameIn" value="Player449310"><b>Choose Avatar</b><div class="optRow" id="avRow"><button onclick="pickAv(this,'🧑')">🧑</button><button onclick="pickAv(this,'👩')">👩</button><button onclick="pickAv(this,'🧔')">🧔</button><button onclick="pickAv(this,'😎')">😎</button></div><b>Choose Car</b><div class="optRow" id="carRow"><button onclick="pickCar(this,0x1d4ed8)">🔵 BLUE</button><button onclick="pickCar(this,0xfacc15)">🟡 TAXI</button><button onclick="pickCar(this,0xef4444)">🔴 RED</button></div></div><button class="big" onclick="saveSetup()">✅ OK - GET C-LICENSE</button></div>
+<div id="menu"><h2 id="welcome">Welcome!</h2><div class="card"><b>🎖️ C-LICENSE</b> XP <span id="xpMenu">0</span>/600 | Races Won: <span id="wins">0</span></div><button class="big" onclick="startRace()">🏁 START RACE</button><button class="big" style="background:#38bdf8" onclick="openOpt()">⚙️ OPTIONS</button></div>
+<div id="options"><h2>⚙️ OPTIONS</h2><div class="card"><b>Control</b><div class="optRow"><button id="cTouch" class="sel" onclick="setControl('touch')">📱 Touch</button><button id="cTilt" onclick="setControl('tilt')">📱↻ Tilt</button></div><b>Sound</b><div class="optRow"><button id="sOn" class="sel" onclick="setSound(true)">🔊 ON</button><button id="sOff" onclick="setSound(false)">🔇 OFF</button></div><b>View</b><div class="optRow"><button onclick="setView('inside')">🪑 Inside</button><button onclick="setView('chase')">🚕 Behind</button></div></div><button class="big" onclick="closeOpt()">✅ SAVE & BACK</button></div>
 </div>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
 <script>
-let left=0,right=0,gas=0,braking=0,tiltX=0,control='touch',sound=true,camMode='near';
-let playerName='Player',avatar='🧑',carColor=0x1d4ed8,money=500,xp=0,racing=false;
+let left=0,right=0,gas=0,braking=0,tiltX=0,control='touch',soundOn=true,view='inside',racing=false,money=500,xp=0,wins=0;
+let avatar='🧑',carColor=0x1d4ed8;
 function pickAv(b,a){avatar=a;document.querySelectorAll('#avRow button').forEach(x=>x.classList.remove('sel'));b.classList.add('sel');}
-function pickCar(b,c){carColor=c=='#1d4ed8'?0x1d4ed8:c=='#facc15'?0xfacc15:c=='#ef4444'?0xef4444:0x22c55e;document.querySelectorAll('#carRow button').forEach(x=>x.classList.remove('sel'));b.classList.add('sel');if(window.playerCar)playerCar.children[0].material.color.setHex(carColor);}
-function saveSetup(){playerName=document.getElementById('nameIn').value||'Player';document.getElementById('pNameTop').innerText=playerName;document.getElementById('pAv').innerText=avatar;document.getElementById('welcome').innerText='Welcome, '+playerName+' '+avatar+'! You got C-License!';document.getElementById('setup').style.display='none';document.getElementById('menu').style.display='flex';}
-function openOpt(){document.getElementById('options').style.display='flex';}
-function closeOpt(){document.getElementById('options').style.display='none';}
-function setControl(m){control=m;document.getElementById('cTouch').classList.toggle('sel',m=='touch');document.getElementById('cTilt').classList.toggle('sel',m=='tilt');if(m=='tilt')window.addEventListener('deviceorientation',e=>{tiltX=e.gamma||0;});}
-function setSound(v){sound=v;document.getElementById('sOn').classList.toggle('sel',v);document.getElementById('sOff').classList.toggle('sel',!v);}
-function setCam(m){camMode=m;document.getElementById('camNear').classList.toggle('sel',m=='near');document.getElementById('camFar').classList.toggle('sel',m=='far');}
-function changeCarColor(c){carColor=c=='#1d4ed8'?0x1d4ed8:c=='#facc15'?0xfacc15:c=='#ef4444'?0xef4444:0x22c55e;if(window.playerCar)playerCar.children[0].material.color.setHex(carColor);}
-
-// --- REAL 3D - FIXED CAMERA ---
-let scene=new THREE.Scene(); scene.background=new THREE.Color(0x87ceeb); scene.fog=new THREE.Fog(0x87ceeb,50,240);
-let cam=new THREE.PerspectiveCamera(62,innerWidth/innerHeight,0.1,500);
+function pickCar(b,c){carColor=c;document.querySelectorAll('#carRow button').forEach(x=>x.classList.remove('sel'));b.classList.add('sel');if(window.playerCar)playerCar.children[0].material.color.setHex(c);}
+function saveSetup(){let n=document.getElementById('nameIn').value||'Player';document.getElementById('pNameTop').innerText=n;document.getElementById('pAv').innerText=avatar;document.getElementById('welcome').innerText='Welcome, '+n+' '+avatar+'!';document.getElementById('setup').style.display='none';document.getElementById('menu').style.display='flex';}
+function openOpt(){document.getElementById('options').style.display='flex';} function closeOpt(){document.getElementById('options').style.display='none';}
+function setControl(m){control=m;document.getElementById('cTouch').classList.toggle('sel',m=='touch');document.getElementById('cTilt').classList.toggle('sel',m=='tilt');if(m=='tilt')addEventListener('deviceorientation',e=>{tiltX=e.gamma||0;});}
+function setSound(v){soundOn=v;document.getElementById('sOn').classList.toggle('sel',v);document.getElementById('sOff').classList.toggle('sel',!v);}
+function setView(v){view=v;document.getElementById('viewBtn').innerText='📷 VIEW: '+(v=='inside'?'INSIDE':'BEHIND');closeOpt();}
+function toggleView(){setView(view=='inside'?'chase':'inside');}
+// --- ENGINE SOUND - real WebAudio, no file needed ---
+let audioCtx=null,osc=null,engineGain=null;
+function startEngine(){if(!soundOn)return; if(!audioCtx){audioCtx=new (window.AudioContext||window.webkitAudioContext)(); osc=audioCtx.createOscillator(); engineGain=audioCtx.createGain(); osc.type='sawtooth'; osc.connect(engineGain); engineGain.connect(audioCtx.destination); osc.start();} audioCtx.resume();}
+function horn(){if(!soundOn)return; try{let a=new (window.AudioContext||window.webkitAudioContext)(); let o=a.createOscillator(); o.frequency.value=400; let g=a.createGain(); o.connect(g); g.connect(a.destination); o.start(); setTimeout(()=>o.stop(),350);}catch(e){}}
+// --- 3D WORLD WITH CURVES ---
+let scene=new THREE.Scene(); scene.background=new THREE.Color(0x87ceeb); scene.fog=new THREE.Fog(0x87ceeb,50,260);
+let cam=new THREE.PerspectiveCamera(70,innerWidth/innerHeight,0.1,500);
 let ren=new THREE.WebGLRenderer({canvas:document.getElementById('game'),antialias:true}); ren.setSize(innerWidth,innerHeight);
 scene.add(new THREE.AmbientLight(0xffffff,0.8)); let sun=new THREE.DirectionalLight(0xffffff,1); sun.position.set(20,40,20); scene.add(sun);
-let road=new THREE.Mesh(new THREE.PlaneGeometry(24,600),new THREE.MeshStandardMaterial({color:0x333a44})); road.rotation.x=-Math.PI/2; road.position.z=-180; scene.add(road);
-// dashes - these MOVE so you feel speed
+let road=new THREE.Mesh(new THREE.PlaneGeometry(26,600),new THREE.MeshStandardMaterial({color:0x333a44})); road.rotation.x=-Math.PI/2; road.position.z=-180; scene.add(road);
 let dashes=[]; for(let i=0;i<50;i++){let d=new THREE.Mesh(new THREE.PlaneGeometry(0.6,5),new THREE.MeshBasicMaterial({color:0xffffff})); d.rotation.x=-Math.PI/2; d.position.set(0,0.06,-i*12); scene.add(d); dashes.push(d);}
-// buildings + trees
-let city=[]; for(let i=0;i<26;i++){let h=18+Math.random()*35; let b=new THREE.Mesh(new THREE.BoxGeometry(14,h,12),new THREE.MeshStandardMaterial({color:[0x7c3aed,0x2563eb,0x475569,0xb45309,0x9ca3af][i%5]})); b.position.set(i%2?-24:24,h/2,-i*22); scene.add(b); city.push(b); let t=new THREE.Mesh(new THREE.ConeGeometry(2.5,6,6),new THREE.MeshStandardMaterial({color:0x166534})); t.position.set(i%2?-15:15,3,-i*22+10); scene.add(t); city.push(t);}
-// player car - BIG, detailed, like GT86
-function makeCar(col){let g=new THREE.Group(); let body=new THREE.Mesh(new THREE.BoxGeometry(2.4,0.8,4.6),new THREE.MeshStandardMaterial({color:col,metalness:0.5,roughness:0.4})); body.position.y=0.85; g.add(body); let cab=new THREE.Mesh(new THREE.BoxGeometry(1.9,0.7,2.2),new THREE.MeshStandardMaterial({color:0x0f172a})); cab.position.set(0,1.5,-0.2); g.add(cab); let sp=new THREE.Mesh(new THREE.BoxGeometry(2.8,0.15,0.6),new THREE.MeshStandardMaterial({color:0x111})); sp.position.set(0,1.55,-2.1); g.add(sp); let light=new THREE.Mesh(new THREE.BoxGeometry(2,0.3,0.2),new THREE.MeshBasicMaterial({color:0xef4444})); light.position.set(0,0.9,-2.35); g.add(light); [[-1.2,-1.5],[1.2,-1.5],[-1.2,1.5],[1.2,1.5]].forEach(p=>{let w=new THREE.Mesh(new THREE.CylinderGeometry(0.45,0.45,0.4,12),new THREE.MeshStandardMaterial({color:0x111})); w.rotation.z=Math.PI/2; w.position.set(p[0],0.45,p[1]); g.add(w);}); return g;}
+let city=[]; for(let i=0;i<28;i++){let h=18+Math.random()*35; let b=new THREE.Mesh(new THREE.BoxGeometry(14,h,12),new THREE.MeshStandardMaterial({color:[0x7c3aed,0x2563eb,0x475569,0xb45309,0x9ca3af][i%5]})); b.position.set(i%2?-26:26,h/2,-i*22); scene.add(b); city.push(b); let t=new THREE.Mesh(new THREE.ConeGeometry(2.5,6,6),new THREE.MeshStandardMaterial({color:0x166534})); t.position.set(i%2?-16:16,3,-i*22+10); scene.add(t); city.push(t);}
+function makeCar(col){let g=new THREE.Group(); let body=new THREE.Mesh(new THREE.BoxGeometry(2.4,0.8,4.6),new THREE.MeshStandardMaterial({color:col,metalness:0.5,roughness:0.4})); body.position.y=0.85; g.add(body); let cab=new THREE.Mesh(new THREE.BoxGeometry(1.9,0.7,2.2),new THREE.MeshStandardMaterial({color:0x0f172a})); cab.position.set(0,1.5,-0.2); g.add(cab); let sp=new THREE.Mesh(new THREE.BoxGeometry(2.8,0.15,0.6),new THREE.MeshStandardMaterial({color:0x111})); sp.position.set(0,1.55,-2.1); g.add(sp); [[-1.2,-1.5],[1.2,-1.5],[-1.2,1.5],[1.2,1.5]].forEach(p=>{let w=new THREE.Mesh(new THREE.CylinderGeometry(0.45,0.45,0.4,12),new THREE.MeshStandardMaterial({color:0x111})); w.rotation.z=Math.PI/2; w.position.set(p[0],0.45,p[1]); g.add(w);}); return g;}
 let playerCar=makeCar(carColor); scene.add(playerCar); window.playerCar=playerCar;
-let rivals=[]; [[-4,-70,0xef4444],[4,-130,0xf59e0b],[0,-190,0x22c55e]].forEach(r=>{let g=makeCar(r[2]); g.position.set(r[0],0,r[1]); scene.add(g); rivals.push(g);});
-let speed=0,px=0,dist=0,wobble=0;
-function startRace(){document.getElementById('menu').style.display='none'; document.getElementById('coach').innerText='HOLD GAS! Steer ◀ ▶ - Dodge traffic!'; racing=true; speed=0; dist=0; px=0; rivals.forEach((r,i)=>r.position.z=-70-i*60); try{document.documentElement.requestFullscreen();}catch(e){}}
+let rivals=[]; [[-4,-80,0xef4444],[4,-140,0xf59e0b],[0,-200,0x22c55e]].forEach(r=>{let g=makeCar(r[2]); g.position.set(r[0],0,r[1]); scene.add(g); rivals.push(g);});
+let speed=0,px=0,dist=0,curve=0,shake=0,nearMiss=0;
+function startRace(){document.getElementById('menu').style.display='none'; racing=true; speed=0; dist=0; px=0; rivals.forEach((r,i)=>r.position.z=-80-i*60); document.getElementById('coach').innerText='HOLD GAS! Feel the wheel turn!'; startEngine(); try{document.documentElement.requestFullscreen();}catch(e){}}
 function animate(){
  requestAnimationFrame(animate);
+ let steer=control=='tilt'?tiltX/18:((right?1:0)-(left?1:0));
  if(racing){
-   let steer=control=='tilt'?tiltX/18:((right?1:0)-(left?1:0));
-   // CAR MOVES - not stuck! It leans, slides, bounces
-   px+=steer*0.09; if(px>8)px=8; if(px<-8)px=-8;
-   if(gas) speed=Math.min(186,speed+0.8); else speed=Math.min(120,speed+0.35); // auto-drive like real game - you don't stall at 0
+   px+=steer*0.11; if(px>8)px=8; if(px<-8)px=-8;
+   if(gas) speed=Math.min(186,speed+0.9); else speed=Math.min(120,speed+0.3);
    if(braking) speed=Math.max(0,speed-2.5);
-   dist+=speed*0.02; wobble=Math.sin(Date.now()/60)*0.02*(speed/186);
-   let move=speed*0.045;
-   // WORLD rushes towards you
-   dashes.forEach(d=>{d.position.z+=move; if(d.position.z>10)d.position.z-=600;});
-   city.forEach(o=>{o.position.z+=move; if(o.position.z>20)o.position.z-=570;});
-   rivals.forEach(r=>{r.position.z+=move*0.25; if(r.position.z>15)r.position.z=-220-Math.random()*80;});
-   // player car position + lean + bounce
-   playerCar.position.set(px,wobble,0); playerCar.rotation.y=-steer*0.18; playerCar.rotation.z=-steer*0.05;
-   // camera BEHIND car, close, follows car - this is the fix!
-   let cz=camMode=='near'?6.5:9; let cy=camMode=='near'?3.1:4.2;
-   cam.position.set(px*0.85,cy,cz); cam.lookAt(px,1.2,-25);
-   document.getElementById('spd').innerText=Math.floor(speed); document.getElementById('spdBar').style.width=(speed/186*100)+'%';
-   if(dist>1500){racing=false; money+=500; xp+=100; document.getElementById('moneyTop').innerText=money; document.getElementById('xpTop').innerText=xp; document.getElementById('xpMenu').innerText=xp; alert('🎉 FINISH! +R500 +100XP! You got C-License PRO!'); document.getElementById('menu').style.display='flex'; return;}
+   dist+=speed*0.02; curve=Math.sin(dist*0.008)*3; // road curves - you must steer!
+   shake=(speed/186)*1.2; // camera shakes at high speed - feels real
+   let move=speed*0.05;
+   dashes.forEach(d=>{d.position.z+=move; d.position.x=curve*Math.abs(d.position.z)/200; if(d.position.z>10)d.position.z-=600;});
+   city.forEach(o=>{o.position.z+=move; o.position.x+=(o.position.x>0?1:-1)*0+curve*0.02; if(o.position.z>20)o.position.z-=600;});
+   rivals.forEach(r=>{r.position.z+=move*0.25; if(r.position.z>15)r.position.z=-240-Math.random()*80; if(Math.abs(r.position.z)<30&&Math.abs(r.position.x-px)<2.5&&nearMiss==0){nearMiss=30; money+=50; document.getElementById('coach').innerText='🔥 NEAR MISS! +R50!';}});
+   if(nearMiss>0)nearMiss--;
+   playerCar.position.set(px,Math.sin(Date.now()/50)*0.02*(speed/186),0); playerCar.rotation.y=-steer*0.2; playerCar.rotation.z=-steer*0.06;
+   // FOV kicks up with speed - feels faster
+   cam.fov=70+(speed/186)*20; cam.updateProjectionMatrix();
+   // CAMERA: INSIDE = you are driver, BEHIND = watch car
+   if(view=='inside'){cam.position.set(px+ (Math.random()-0.5)*shake*0.05, 2.1+(Math.random()-0.5)*shake*0.03, 0.8); cam.lookAt(px+steer*4+curve,1.2,-30); playerCar.visible=false; document.getElementById('wheel').style.display='flex';}
+   else {cam.position.set(px*0.85,3.2,6.8); cam.lookAt(px,1.2,-25); playerCar.visible=true; document.getElementById('wheel').style.display='flex';}
+   // steering wheel turns
+   document.getElementById('wheel').style.transform=`translateX(-50%) rotate(${steer*120+px*8}deg)`;
+   // dashboard
+   document.getElementById('spd').innerText=Math.floor(speed);
+   document.getElementById('gear').innerText=speed<40?1:speed<80?2:speed<120?3:speed<160?4:5;
+   document.getElementById('mirror').innerText=rivals[0].position.z>-20?'🚗 BEHIND!':'---';
+   if(engineGain) engineGain.gain.value=soundOn?0.05+speed/186*0.12:0; if(osc) osc.frequency.value=50+speed*1.2;
+   if(dist>1500){racing=false; money+=500; xp+=100; wins++; document.getElementById('moneyTop').innerText=money; document.getElementById('xpTop').innerText=xp; document.getElementById('xpMenu').innerText=xp; document.getElementById('wins').innerText=wins; alert('🎉 FINISH! +R500 +100XP! Near misses: R'+(money)); document.getElementById('menu').style.display='flex'; return;}
  } else {
-   // menu idle - car slowly driving so it NEVER looks stuck
-   playerCar.position.set(Math.sin(Date.now()/1000)*0.3,0,0); cam.position.set(0,3.1,6.5); cam.lookAt(0,1.2,-25);
-   dashes.forEach(d=>{d.position.z+=0.3; if(d.position.z>10)d.position.z-=600;});
+   playerCar.visible=true; playerCar.position.set(0,0,0); cam.position.set(0,3.2,6.8); cam.lookAt(0,1.2,-25);
  }
  ren.render(scene,cam);
 }
