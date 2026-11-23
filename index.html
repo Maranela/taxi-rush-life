@@ -2,56 +2,96 @@
 <html>
 <head>
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>TAXI RUSH LIFE - Story</title>
+<title>TAXI RUSH LIFE - Visual Novel</title>
 <style>
 body{margin:0;background:#111;color:#fff;font-family:Arial;text-align:center}
 h1{color:#facc15;margin:3px;font-size:18px}
-#hud{font-size:13px;margin:2px}
-canvas{background:#222;display:block;margin:5px auto;border:3px solid #facc15;border-radius:10px;width:95vw;max-width:640px;height:280px;touch-action:none}
-button{padding:8px 14px;margin:3px;font-size:14px;border:none;border-radius:10px;background:#facc15;font-weight:bold}
-#story{background:#1f2937;border:2px solid #facc15;border-radius:10px;padding:8px;margin:5px auto;max-width:640px;text-align:left;font-size:13px;line-height:1.3}
+canvas{background:#2d5a2d;display:block;margin:5px auto;border:3px solid #facc15;border-radius:10px;width:95vw;max-width:640px;height:300px;touch-action:none}
+button{padding:10px 14px;margin:3px;font-size:16px;border:none;border-radius:12px;background:#facc15;font-weight:bold}
+#novel{display:none;background:#1f2937;border:3px solid #facc15;border-radius:12px;padding:12px;margin:5px auto;max-width:640px;text-align:left}
+#face{font-size:55px;float:left;margin-right:12px}
+#dpad button{width:60px;height:50px;font-size:22px}
 #rotate{display:none;position:fixed;inset:0;background:#111;z-index:99;align-items:center;justify-content:center;flex-direction:column;font-size:22px;padding:20px;text-align:center}
 @media (orientation:portrait){#rotate{display:flex}}
 </style>
 </head>
 <body>
-<div id="rotate">🔄<br><br>ROTATE YOUR PHONE<br>SIDEWAYS TO PLAY<br><br>↔️ Turn it like this ↔️<br><br><small style="font-size:14px">Game will start automatically!</small></div>
-<h1>🚕 TAXI RUSH LIFE - STORY</h1>
-<div id="hud">💰 Money: R0 | 🎯 Goal: R500 | ❤️ Lives: 3 | 📍 Soshanguve</div>
-<div id="story">👋 <b>DAY 1 - SOSHANGUVE:</b> Taxi broke! Need R500. <b>Gogo:</b> "Take me to Mabopane, I pay R50!"<br>👆 TAP LEFT side to go LEFT, TAP RIGHT side to go RIGHT. No buttons!</div>
-<canvas id="game" width="640" height="280"></canvas>
-<div><button onclick="nextStory()">💬 NEXT STORY</button> <button onclick="location.reload()">🔄 RESTART</button></div>
+<div id="rotate">🔄<br><br>ROTATE PHONE SIDEWAYS<br>↔️<br><small>Game starts automatically!</small></div>
+<h1>🚕 TAXI RUSH LIFE - SOSHANGUVE TOWN</h1>
+<div id="hud">💰 R0 | 📍 Soshanguve Town | Walk to a character + TALK!</div>
+<canvas id="game" width="640" height="300"></canvas>
+<div id="novel">
+<div id="face">👵</div>
+<div id="nname" style="color:#facc15;font-weight:bold">GOGO</div>
+<div id="ntext" style="margin:8px 0;line-height:1.4">...</div>
+<button onclick="nextDialogue()">▶️ NEXT / YES</button>
+<button onclick="closeNovel()">❌ CLOSE</button>
+</div>
+<div id="dpad">
+<button onclick="move(0,-1)">⬆️</button><br>
+<button onclick="move(-1,0)">⬅️</button>
+<button onclick="talk()">💬 TALK</button>
+<button onclick="move(1,0)">➡️</button><br>
+<button onclick="move(0,1)">⬇️</button>
+</div>
+<p style="font-size:12px">Walk to 👵 Gogo / 🎓 Student / 👷 Worker / 🔧 Mechanic and press TALK</p>
 <script>
 let c=document.getElementById("game"),x=c.getContext("2d");
-let taxi={x:300,y:210,w:50,h:50},cars=[],people=[],money=0,lives=3,score=0,pass=0,playing=true,level=0;
-let stories=["👋 DAY 1 - SOSHANGUVE: Gogo needs lift to Mabopane. R50. Pick up 2 passengers!","🎓 DAY 2 - STUDENT: 'Bhuti I'm late for school in Mabopane! Rush me, I'll pay R80!'","👷 DAY 3 - WORKER: 'Need to get to Pretoria CBD fast!'","🏙️ DAY 4 - PRETORIA: You made it! Goal R500 to fix taxi. Keep hustling to Joburg!","🎉 YOU DID IT! Fixed taxi! You are KING of Soshanguve rank!"];
-let places=["Soshanguve","Soshanguve","Mabopane","Pretoria","Joburg"];
-function move(d){taxi.x+=d*40; if(taxi.x<10)taxi.x=10; if(taxi.x>580)taxi.x=580;}
-// TAP CONTROLS - tap left/right half of game
-c.addEventListener("touchstart",e=>{let r=c.getBoundingClientRect(); let tx=e.touches[0].clientX-r.left; if(tx< r.width/2) move(-1); else move(1);});
-c.addEventListener("click",e=>{let r=c.getBoundingClientRect(); let tx=e.clientX-r.left; if(tx< r.width/2) move(-1); else move(1);});
-// SWIPE CONTROLS
-let sx=0; c.addEventListener("touchmove",e=>{e.preventDefault(); let nx=e.touches[0].clientX; if(nx>sx+10){move(1);sx=nx;} if(nx<sx-10){move(-1);sx=nx;}}, {passive:false});
-function nextStory(){level=Math.min(level+1,4); document.getElementById("story").innerHTML=stories[level];}
-// AUTO START - no button needed!
-function loop(){
- if(!playing) return;
- if(Math.random()<0.04) cars.push({x:Math.floor(Math.random()*11)*55+10,y:-50,w:50,h:50});
- if(Math.random()<0.02) people.push({x:Math.floor(Math.random()*11)*55+15,y:-20});
- x.clearRect(0,0,640,280); x.fillStyle="#333"; x.fillRect(0,0,640,280);
- x.fillStyle="#facc15"; for(let i=0;i<11;i++){ x.fillRect(35+i*55,(i*50+score)%280,4,25); }
- x.fillStyle="#facc15"; x.fillRect(taxi.x,taxi.y,taxi.w,taxi.h);
- x.fillStyle="#000"; x.fillRect(taxi.x+5,taxi.y+8,40,16); x.fillStyle="#fff"; x.font="bold 12px Arial"; x.fillText("TAXI",taxi.x+8,taxi.y+32);
- for(let i=cars.length-1;i>=0;i--){let car=cars[i]; car.y+=5+money/250; x.fillStyle="#ef4444"; x.fillRect(car.x,car.y,car.w,car.h); x.fillStyle="#fff"; x.fillText("CAR",car.x+8,car.y+30);
-  if(car.x<taxi.x+taxi.w && car.x+car.w>taxi.x && car.y<taxi.y+taxi.h && car.y+car.h>taxi.y){cars.splice(i,1);lives--; if(lives<=0){playing=false; setTimeout(()=>{if(confirm("CRASH! Money: R"+money+" Play again?")) location.reload();},100);}}
-  if(car.y>280) cars.splice(i,1);}
- for(let i=people.length-1;i>=0;i--){let p=people[i]; p.y+=3; x.fillStyle="#22c55e"; x.beginPath(); x.arc(p.x+15,p.y+15,14,0,Math.PI*2); x.fill(); x.fillStyle="#fff"; x.font="bold 10px Arial"; x.fillText("R50",p.x+2,p.y+18);
-  if(p.x<taxi.x+taxi.w && p.x+30>taxi.x && p.y<taxi.y+taxi.h && p.y+30>taxi.y){people.splice(i,1);pass++;money+=50;score+=50; if(money>=500){playing=false; setTimeout(()=>{alert("🎉 YOU FIXED YOUR TAXI! R500! KING!"); nextStory();},100);}}
-  if(p.y>280) people.splice(i,1);}
- score+=1; document.getElementById("hud").innerText=`💰 Money: R${money} | 🎯 Goal: R500 | ❤️ Lives: ${lives} | 📍 ${places[level]} | Pass: ${pass}`;
- requestAnimationFrame(loop);
+let player={x:320,y:150},money=0;
+let chars=[
+ {name:"GOGO",face:"👵",x:80,y:70,color:"#f472b6",lines:["Sawubona my child!","My knees are sore, take me to Mabopane?","I will pay you R50! You are a good boy!","Hamba kahle! Go, go!"]},
+ {name:"STUDENT",face:"🎓",x:520,y:70,color:"#60a5fa",lines:["Bhuti! Bhuti! I'm late!","School starts in 5 mins in Mabopane!","If you rush me I'll pay R80, please!","Sharp sharp! Let's go!"]},
+ {name:"WORKER",face:"👷",x:80,y:230,color:"#fb923c",lines:["Eita! Taxi!","I need Pretoria CBD, my boss will kill me!","Traffic is crazy, but you drive fast neh?","I'll pay R100 if you make it on time!"]},
+ {name:"MECHANIC",face:"🔧",x:520,y:230,color:"#a3a3a3",lines:["Your taxi is broken, my friend.","R500 to fix it. Engine is finished!","Go hustle in town, talk to people.","Come back when you have R500!"]}
+];
+let cur=null,li=0;
+function move(dx,dy){player.x+=dx*25; player.y+=dy*25; if(player.x<20)player.x=20; if(player.x>600)player.x=600; if(player.y<20)player.y=20; if(player.y>260)player.y=260; draw();}
+function talk(){
+ let near=null,dist=999;
+ chars.forEach(ch=>{let d=Math.abs(ch.x-player.x)+Math.abs(ch.y-player.y); if(d<dist){dist=d; near=ch;}});
+ if(dist>90){alert("Walk closer to a character first! Go to 👵 🎓 👷 🔧"); return;}
+ cur=near; li=0; showNovel();
 }
-loop();
+function showNovel(){
+ document.getElementById("novel").style.display="block";
+ document.getElementById("face").innerText=cur.face;
+ document.getElementById("nname").innerText=cur.name;
+ document.getElementById("ntext").innerText=cur.lines[li];
+ document.getElementById("novel").scrollIntoView({behavior:"smooth"});
+}
+function nextDialogue(){
+ if(!cur) return; li++;
+ if(li>=cur.lines.length){
+   // give money
+   let pay = cur.name=="GOGO"?50: cur.name=="STUDENT"?80: cur.name=="WORKER"?100:0;
+   if(pay>0){money+=pay; alert(cur.name+" paid you R"+pay+"! Total: R"+money); if(money>=500) alert("🎉 YOU HAVE R500! Go talk to MECHANIC to fix taxi!");}
+   closeNovel(); return;
+ }
+ showNovel();
+}
+function closeNovel(){document.getElementById("novel").style.display="none"; cur=null; updateHud();}
+function updateHud(){document.getElementById("hud").innerText=`💰 R${money} | 🎯 Goal R500 | 📍 Soshanguve Town | Walk to character + TALK!`;}
+function draw(){
+ x.clearRect(0,0,640,300);
+ // town
+ x.fillStyle="#2d5a2d"; x.fillRect(0,0,640,300);
+ x.fillStyle="#444"; x.fillRect(0,130,640,40); x.fillStyle="#444"; x.fillRect(300,0,40,300);
+ x.fillStyle="#facc15"; for(let i=0;i<10;i++){x.fillRect(i*65,147,25,4);}
+ // houses
+ x.fillStyle="#7c3aed"; x.fillRect(30,20,120,70); x.fillStyle="#fff"; x.font="bold 12px Arial"; x.fillText("GOGO'S HOUSE",35,55);
+ x.fillStyle="#2563eb"; x.fillRect(490,20,120,70); x.fillText("SCHOOL",520,55);
+ x.fillStyle="#ea580c"; x.fillRect(30,200,120,70); x.fillText("TAXI RANK",45,235);
+ x.fillStyle="#525252"; x.fillRect(490,200,120,70); x.fillText("GARAGE",520,235);
+ // characters
+ chars.forEach(ch=>{x.fillStyle=ch.color; x.beginPath(); x.arc(ch.x,ch.y,22,0,Math.PI*2); x.fill(); x.fillStyle="#fff"; x.font="28px Arial"; x.fillText(ch.face,ch.x-16,ch.y+10); x.font="bold 10px Arial"; x.fillText(ch.name,ch.x-25,ch.y+38);});
+ // player
+ x.fillStyle="#facc15"; x.beginPath(); x.arc(player.x,player.y,20,0,Math.PI*2); x.fill(); x.fillStyle="#000"; x.font="26px Arial"; x.fillText("🧑",player.x-14,player.y+9);
+ x.fillStyle="#fff"; x.font="bold 11px Arial"; x.fillText("YOU",player.x-14,player.y+36);
+ updateHud();
+}
+draw();
+// tap on canvas to walk there
+c.addEventListener("click",e=>{let r=c.getBoundingClientRect(); player.x=(e.clientX-r.left)/r.width*640; player.y=(e.clientY-r.top)/r.height*300; draw();});
 </script>
 </body>
 </html>
